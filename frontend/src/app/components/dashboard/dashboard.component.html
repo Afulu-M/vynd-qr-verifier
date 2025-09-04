@@ -1,0 +1,28 @@
+<div class="dashboard-container">
+  <header>
+    <h1>Vynd QR Verifier Dashboard</h1>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </header>
+  
+  <main>
+    <div class="dashboard-grid">
+      <div class="card">
+        <h3>QR Scanner</h3>
+        <p>Scan QR codes for device verification</p>
+        <button class="primary-btn" (click)="navigateToScanner()">Start Scanner</button>
+      </div>
+      
+      <div class="card">
+        <h3>Recent Scans</h3>
+        <p>View your recent scanning activity</p>
+        <button class="secondary-btn">View History</button>
+      </div>
+      
+      <div class="card">
+        <h3>Statistics</h3>
+        <p>View scanning statistics and reports</p>
+        <button class="secondary-btn">View Stats</button>
+      </div>
+    </div>
+  </main>
+</div>

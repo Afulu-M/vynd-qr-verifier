@@ -1,0 +1,12 @@
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Core\bin\Debug\net9.0\VyndQRVerifier.Core.deps.json
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Core\bin\Debug\net9.0\VyndQRVerifier.Core.dll
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Core\bin\Debug\net9.0\VyndQRVerifier.Core.pdb
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Core\obj\Debug\net9.0\VyndQRVerifier.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Core\obj\Debug\net9.0\VyndQRVerifier.Core.AssemblyInfoInputs.cache
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Core\obj\Debug\net9.0\VyndQRVerifier.Core.AssemblyInfo.cs
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Core\obj\Debug\net9.0\VyndQRVerifier.Core.csproj.CoreCompileInputs.cache
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Core\obj\Debug\net9.0\VyndQRVerifier.Core.sourcelink.json
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Core\obj\Debug\net9.0\VyndQRVerifier.Core.dll
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Core\obj\Debug\net9.0\refint\VyndQRVerifier.Core.dll
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Core\obj\Debug\net9.0\VyndQRVerifier.Core.pdb
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Core\obj\Debug\net9.0\ref\VyndQRVerifier.Core.dll

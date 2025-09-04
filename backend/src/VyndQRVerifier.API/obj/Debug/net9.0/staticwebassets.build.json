@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "TPvU0OIC+E54+FmcehoJjEN/roPr8jbXXIZgCkH9aI4=",
+  "Source": "VyndQRVerifier.API",
+  "BasePath": "_content/VyndQRVerifier.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

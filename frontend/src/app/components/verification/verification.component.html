@@ -1,0 +1,182 @@
+<div class="verification-container">
+  <header>
+    <h1>Device Verification System</h1>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </header>
+
+  <main>
+    <!-- Step 1: Quectel IMEI Scan -->
+    <div class="step-section" [class.active]="currentStep === 'quectel'">
+      <div class="step-header">
+        <h2>
+          <span class="step-number">1</span>
+          Scan Quectel Module IMEI
+        </h2>
+        <div class="step-status" *ngIf="verificationData.quectelImei">✅ Complete</div>
+      </div>
+      
+      <div class="scan-input-section">
+        <label for="quectel-input">Use barcode scanner to scan IMEI:</label>
+        <input 
+          #quectelInput
+          type="text" 
+          id="quectel-input"
+          [(ngModel)]="verificationData.quectelImei"
+          (input)="onQuectelScan()"
+          placeholder="Scan or enter 15-digit IMEI"
+          maxlength="15"
+          class="scan-input"
+          [class.completed]="verificationData.quectelImei.length >= 15">
+        
+        <div class="input-status">
+          <div *ngIf="verificationData.quectelImei.length > 0 && verificationData.quectelImei.length < 15" 
+               class="warning">
+            IMEI must be 15 digits (current: {{verificationData.quectelImei.length}})
+          </div>
+          <div *ngIf="verificationData.quectelImei.length >= 15" class="success">
+            ✅ Quectel IMEI: {{verificationData.quectelImei}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Enclosure QR Code Scan -->
+    <div class="step-section" [class.active]="currentStep === 'enclosure'" [class.disabled]="currentStep === 'quectel'">
+      <div class="step-header">
+        <h2>
+          <span class="step-number">2</span>
+          Scan Enclosure QR Code
+        </h2>
+        <div class="step-status" *ngIf="verificationData.enclosureQrUrl">✅ Complete</div>
+      </div>
+      
+      <div class="scan-input-section">
+        <label for="enclosure-input">Scan QR code from device enclosure:</label>
+        <input 
+          #enclosureInput
+          type="text" 
+          id="enclosure-input"
+          [(ngModel)]="verificationData.enclosureQrUrl"
+          (input)="onEnclosureQrScan()"
+          placeholder="Scan QR code URL"
+          class="scan-input"
+          [disabled]="currentStep === 'quectel'"
+          [class.completed]="verificationData.enclosureQrUrl">
+        
+        <div class="input-status" *ngIf="verificationData.enclosureQrUrl">
+          <div class="url-validation">
+            <div [class.success]="verificationData.urlFormatValid" 
+                 [class.error]="verificationData.urlFormatValid === false">
+              URL Format: 
+              <span *ngIf="verificationData.urlFormatValid">✅ Valid</span>
+              <span *ngIf="verificationData.urlFormatValid === false">❌ Invalid</span>
+            </div>
+            <div *ngIf="verificationData.enclosureImei" class="extracted-imei">
+              Extracted IMEI: {{verificationData.enclosureImei}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Validation Results -->
+    <div class="validation-section" *ngIf="currentStep === 'files' || currentStep === 'complete'">
+      <h3>Validation Results</h3>
+      <div class="validation-grid">
+        <div class="validation-item">
+          <span class="label">IMEI Match:</span>
+          <span [class.success]="verificationData.imeiMatches" 
+                [class.error]="verificationData.imeiMatches === false">
+            <span *ngIf="verificationData.imeiMatches">✅ Match</span>
+            <span *ngIf="verificationData.imeiMatches === false">❌ No Match</span>
+          </span>
+        </div>
+        <div class="validation-item">
+          <span class="label">URL Format:</span>
+          <span [class.success]="verificationData.urlFormatValid" 
+                [class.error]="verificationData.urlFormatValid === false">
+            <span *ngIf="verificationData.urlFormatValid">✅ Valid</span>
+            <span *ngIf="verificationData.urlFormatValid === false">❌ Invalid</span>
+          </span>
+        </div>
+        <div class="validation-item">
+          <span class="label">Quectel IMEI:</span>
+          <span class="imei-display">{{verificationData.quectelImei}}</span>
+        </div>
+        <div class="validation-item">
+          <span class="label">Enclosure IMEI:</span>
+          <span class="imei-display">{{verificationData.enclosureImei}}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: File Uploads -->
+    <div class="step-section" [class.active]="currentStep === 'files'" [class.disabled]="currentStep !== 'files' && currentStep !== 'complete'">
+      <div class="step-header">
+        <h2>
+          <span class="step-number">3</span>
+          Upload Documentation
+        </h2>
+      </div>
+      
+      <div class="upload-section">
+        <div class="upload-group">
+          <label for="battery-file">Battery Data:</label>
+          <input 
+            #batteryFileInput
+            type="file" 
+            id="battery-file"
+            (change)="onBatteryFileSelected($event)"
+            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+            class="file-input">
+          <div *ngIf="verificationData.batteryFile" class="file-status">
+            ✅ {{verificationData.batteryFile.name}}
+          </div>
+        </div>
+
+        <div class="upload-group">
+          <label for="qa-file">QA Results:</label>
+          <input 
+            #qaFileInput
+            type="file" 
+            id="qa-file"
+            (change)="onQaFileSelected($event)"
+            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+            class="file-input">
+          <div *ngIf="verificationData.qaFile" class="file-status">
+            ✅ {{verificationData.qaFile.name}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Section -->
+    <div class="save-section" *ngIf="currentStep === 'files' || currentStep === 'complete'">
+      <button 
+        class="save-btn primary-btn"
+        (click)="saveVerification()"
+        [disabled]="!canSave() || isProcessing"
+        *ngIf="currentStep === 'files'">
+        <span *ngIf="!isProcessing">Save Verification</span>
+        <span *ngIf="isProcessing">Saving...</span>
+      </button>
+    </div>
+
+    <!-- Complete Section -->
+    <div class="complete-section" *ngIf="currentStep === 'complete'">
+      <div class="success-message">
+        <h3>✅ Verification Complete!</h3>
+        <p>All data has been saved successfully.</p>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="primary-btn" (click)="startNewVerification()">
+          Start New Verification
+        </button>
+        <button class="secondary-btn" (click)="logout()">
+          Logout
+        </button>
+      </div>
+    </div>
+  </main>
+</div>

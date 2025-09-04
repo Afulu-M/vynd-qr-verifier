@@ -1,0 +1,58 @@
+.dashboard-container {
+  min-height: 100vh;
+  background-color: var(--vynd-light-gray);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 20px 40px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  margin: 0;
+  color: var(--vynd-red);
+}
+
+.logout-btn {
+  background: none;
+  border: 2px solid var(--vynd-red);
+  color: var(--vynd-red);
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: var(--vynd-red);
+  color: white;
+}
+
+main {
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  text-align: center;
+}
+
+.card p {
+  margin: 16px 0;
+  color: #666;
+}
+
+.card button {
+  margin-top: 16px;
+}

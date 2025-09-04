@@ -1,0 +1,127 @@
+.scanner-container {
+  min-height: 100vh;
+  background-color: var(--vynd-light-gray);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 20px 40px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  margin: 0;
+  color: var(--vynd-red);
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--vynd-red);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.back-btn:hover {
+  color: var(--vynd-dark-red);
+}
+
+main {
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.scanner-section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.scanner-area {
+  background: white;
+  border-radius: 8px;
+  padding: 32px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.scanner-placeholder {
+  width: 300px;
+  height: 300px;
+  border: 3px dashed #ddd;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 32px auto;
+  transition: all 0.3s;
+}
+
+.scanner-placeholder.scanning {
+  border-color: var(--vynd-red);
+  background-color: rgba(238, 39, 55, 0.05);
+}
+
+.scanner-placeholder p {
+  color: #666;
+  margin: 0;
+  font-size: 18px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--vynd-red);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.scan-btn {
+  padding: 16px 32px;
+  font-size: 18px;
+}
+
+.scan-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.results-section {
+  background: white;
+  border-radius: 8px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.results-section h3 {
+  margin-top: 0;
+  color: var(--vynd-dark-gray);
+}
+
+.result-box {
+  background: var(--vynd-light-gray);
+  padding: 16px;
+  border-radius: 4px;
+  margin: 16px 0;
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.result-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}

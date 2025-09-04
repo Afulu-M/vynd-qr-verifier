@@ -1,0 +1,16 @@
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\bin\Debug\net9.0\VyndQRVerifier.Infrastructure.deps.json
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\bin\Debug\net9.0\VyndQRVerifier.Infrastructure.dll
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\bin\Debug\net9.0\VyndQRVerifier.Infrastructure.pdb
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\bin\Debug\net9.0\VyndQRVerifier.Core.dll
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\bin\Debug\net9.0\VyndQRVerifier.Core.pdb
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\obj\Debug\net9.0\VyndQRVerifier.Infrastructure.csproj.AssemblyReference.cache
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\obj\Debug\net9.0\VyndQRVerifier.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\obj\Debug\net9.0\VyndQRVerifier.Infrastructure.AssemblyInfoInputs.cache
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\obj\Debug\net9.0\VyndQRVerifier.Infrastructure.AssemblyInfo.cs
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\obj\Debug\net9.0\VyndQRVerifier.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\obj\Debug\net9.0\VyndQRVerifier.Infrastructure.sourcelink.json
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\obj\Debug\net9.0\VyndQRVe.2B89B620.Up2Date
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\obj\Debug\net9.0\VyndQRVerifier.Infrastructure.dll
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\obj\Debug\net9.0\refint\VyndQRVerifier.Infrastructure.dll
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\obj\Debug\net9.0\VyndQRVerifier.Infrastructure.pdb
+C:\Development\Vynd\QRScanner\VyndQRVerifier\backend\src\VyndQRVerifier.Infrastructure\obj\Debug\net9.0\ref\VyndQRVerifier.Infrastructure.dll

@@ -1,0 +1,39 @@
+<div class="scanner-container">
+  <header>
+    <h1>QR Scanner</h1>
+    <button class="back-btn" (click)="backToDashboard()">← Back to Dashboard</button>
+  </header>
+
+  <main>
+    <div class="scanner-section">
+      <div class="scanner-area">
+        <div class="scanner-placeholder" [class.scanning]="isScanning">
+          <p *ngIf="!isScanning && !scanResult">Click "Start Scan" to begin scanning</p>
+          <p *ngIf="isScanning">Scanning... Please wait</p>
+          <div *ngIf="isScanning" class="spinner"></div>
+        </div>
+        
+        <div class="scan-controls">
+          <button 
+            class="scan-btn" 
+            (click)="startScan()" 
+            [disabled]="isScanning">
+            {{ isScanning ? 'Scanning...' : 'Start Scan' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="results-section" *ngIf="scanResult">
+        <h3>Scan Result:</h3>
+        <div class="result-box">
+          <p>{{ scanResult }}</p>
+        </div>
+        
+        <div class="result-actions">
+          <button class="primary-btn">Verify IMEI</button>
+          <button class="secondary-btn" (click)="scanResult = ''">Clear Result</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
