@@ -71,7 +71,7 @@ export class VerificationComponent {
   }
 
   extractImeiFromUrl() {
-    const urlPattern = /https:\/\/dev-vynd-full\.web\.app\/#\/scan-device\/(\d{15})/;
+    const urlPattern = /https:\/\/tydendigital\.com\/#\/scan-device\/(\d{15})/;
     const match = this.verificationData.enclosureQrUrl.match(urlPattern);
     
     if (match && match[1]) {
