@@ -32,7 +32,9 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/favicon.ico",
+              "staticwebapp.config.json"
             ],
             "styles": [
               "src/styles.scss"
@@ -91,7 +93,9 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/favicon.ico",
+              "staticwebapp.config.json"
             ],
             "styles": [
               "src/styles.scss"
