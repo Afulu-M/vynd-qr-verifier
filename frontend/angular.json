@@ -34,7 +34,7 @@
                 "input": "public"
               },
               "src/favicon.ico",
-              "staticwebapp.config.json"
+              "src/staticwebapp.config.json"
             ],
             "styles": [
               "src/styles.scss"
@@ -95,7 +95,7 @@
                 "input": "public"
               },
               "src/favicon.ico",
-              "staticwebapp.config.json"
+              "src/staticwebapp.config.json"
             ],
             "styles": [
               "src/styles.scss"
