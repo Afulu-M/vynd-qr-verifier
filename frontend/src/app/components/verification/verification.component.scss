@@ -237,104 +237,48 @@ main {
   box-shadow: 0 4px 16px rgba(244, 67, 54, 0.2);
   border: 2px solid #f44336;
   overflow: hidden;
-
-  .validation-header {
-    &.failure {
-      background: linear-gradient(135deg, #f44336, #e53935);
-      color: white;
-      padding: 24px;
-      text-align: center;
-    }
-
-    .failure-title {
-      margin: 0;
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-
-    .validation-subtitle {
-      margin: 8px 0 0;
-      font-size: 16px;
-      opacity: 0.95;
-    }
-  }
-
-  .failure-results-container {
-    padding: 24px;
-  }
-
-  .failure-actions {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    margin-top: 24px;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .large-btn {
-      padding: 16px 32px;
-      font-size: 18px;
-      font-weight: 600;
-      border-radius: 8px;
-      transition: all 0.3s;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      }
-    }
-  }
 }
 
-.validation-section {
+// Shared validation styles
+.validation-section, .validation-failure-section {
   background: white;
   border-radius: 12px;
   padding: 0;
   margin-bottom: 20px;
   overflow: hidden;
 
-  &.success-validation {
-    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.2);
-    border: 2px solid #4caf50;
-  }
-
   .validation-header {
-    background: linear-gradient(135deg, #4caf50, #45a049);
     color: white;
     padding: 24px;
     text-align: center;
 
-    .success-title {
+    h2 {
       margin: 0;
       font-size: 28px;
       font-weight: bold;
       letter-spacing: 1px;
     }
 
-    .validation-subtitle {
+    p {
       margin: 8px 0 0;
       font-size: 16px;
       opacity: 0.95;
     }
+
+    &.failure {
+      background: linear-gradient(135deg, #f44336, #e53935);
+    }
   }
 
-  .validation-results-container {
+  .validation-results-container, .failure-results-container {
     padding: 24px;
   }
 
   .main-results {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     margin-bottom: 32px;
-
-    @media (max-width: 768px) {
-      grid-template-columns: 1fr;
-    }
   }
 
   .result-card {
@@ -343,55 +287,46 @@ main {
     padding: 20px;
     display: flex;
     gap: 16px;
-    transition: all 0.3s;
 
     &.success {
       border-color: #4caf50;
-      background: linear-gradient(135deg, rgba(76, 175, 80, 0.05), rgba(76, 175, 80, 0.02));
+      background: rgba(76, 175, 80, 0.05);
     }
 
     &.error {
       border-color: #f44336;
-      background: linear-gradient(135deg, rgba(244, 67, 54, 0.05), rgba(244, 67, 54, 0.02));
+      background: rgba(244, 67, 54, 0.05);
     }
 
-    .result-icon {
-      flex-shrink: 0;
-
-      .large-icon {
-        font-size: 48px;
-        display: block;
-      }
+    .large-icon {
+      font-size: 48px;
     }
 
-    .result-content {
-      flex: 1;
+    h4 {
+      margin: 0 0 8px;
+      color: #333;
+      font-size: 16px;
+      font-weight: 600;
+    }
 
-      h4 {
-        margin: 0 0 8px;
-        color: #333;
-        font-size: 16px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-      }
+    .result-status {
+      margin: 0 0 8px;
+      font-size: 24px;
+      font-weight: bold;
 
-      .result-status {
-        margin: 0 0 8px;
-        font-size: 24px;
-        font-weight: bold;
+      &:not(.error) {
         color: #4caf50;
-
-        &.error {
-          color: #f44336;
-        }
       }
 
-      .result-detail {
-        margin: 0;
-        color: #666;
-        font-size: 14px;
-        line-height: 1.4;
+      &.error {
+        color: #f44336;
       }
+    }
+
+    .result-detail {
+      margin: 0;
+      color: #666;
+      font-size: 14px;
     }
   }
 
@@ -411,15 +346,9 @@ main {
       font-weight: 600;
     }
 
-    .info-grid {
-      display: grid;
-      gap: 12px;
-    }
-
     .info-item {
       display: flex;
       justify-content: space-between;
-      align-items: center;
       padding: 8px 0;
       border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 
@@ -457,6 +386,33 @@ main {
         }
       }
     }
+  }
+
+  .failure-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 24px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+
+    .large-btn {
+      padding: 16px 32px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 8px;
+    }
+  }
+}
+
+.validation-section.success-validation {
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.2);
+  border: 2px solid #4caf50;
+
+  .validation-header {
+    background: linear-gradient(135deg, #4caf50, #45a049);
   }
 }
 
