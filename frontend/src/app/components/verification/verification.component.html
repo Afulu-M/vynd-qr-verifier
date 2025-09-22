@@ -6,26 +6,32 @@
 
   <main>
     <!-- Device Type Selection -->
-    <div class="device-type-section">
+    <div class="device-type-section" [class.disabled]="validationFailed">
       <h3>Select Device Type to Test:</h3>
       <div class="device-type-options">
-        <label class="checkbox-label">
+        <label class="radio-label">
           <input
-            type="checkbox"
-            [(ngModel)]="verificationData.deviceTypes.tydenbrooks"
-            (change)="onDeviceTypeChange()">
-          <span class="checkbox-text">Tydenbrooks Device</span>
+            type="radio"
+            name="deviceType"
+            value="tydenbrooks"
+            [(ngModel)]="verificationData.selectedDeviceType"
+            (change)="onDeviceTypeChange()"
+            [disabled]="validationFailed">
+          <span class="radio-text">Tydenbrooks Device</span>
         </label>
-        <label class="checkbox-label">
+        <label class="radio-label">
           <input
-            type="checkbox"
-            [(ngModel)]="verificationData.deviceTypes.vynd"
-            (change)="onDeviceTypeChange()">
-          <span class="checkbox-text">Vynd Device</span>
+            type="radio"
+            name="deviceType"
+            value="vynd"
+            [(ngModel)]="verificationData.selectedDeviceType"
+            (change)="onDeviceTypeChange()"
+            [disabled]="validationFailed">
+          <span class="radio-text">Vynd Device</span>
         </label>
       </div>
-      <div class="device-warning" *ngIf="!verificationData.deviceTypes.tydenbrooks && !verificationData.deviceTypes.vynd">
-        ⚠️ Please select at least one device type to test
+      <div class="device-warning" *ngIf="!verificationData.selectedDeviceType">
+        ⚠️ Please select a device type to test
       </div>
     </div>
 
@@ -41,15 +47,16 @@
       
       <div class="scan-input-section">
         <label for="quectel-input">Use barcode scanner to scan IMEI:</label>
-        <input 
+        <input
           #quectelInput
-          type="text" 
+          type="text"
           id="quectel-input"
           [(ngModel)]="verificationData.quectelImei"
           (input)="onQuectelScan()"
           placeholder="Scan or enter 15-digit IMEI"
           maxlength="15"
           class="scan-input"
+          [disabled]="validationFailed"
           [class.completed]="verificationData.quectelImei.length >= 15">
         
         <div class="input-status">
@@ -76,15 +83,17 @@
       
       <div class="scan-input-section">
         <label for="enclosure-input">Scan QR code from device enclosure:</label>
-        <input 
+        <input
           #enclosureInput
-          type="text" 
+          type="text"
           id="enclosure-input"
           [(ngModel)]="verificationData.enclosureQrUrl"
-          (input)="onEnclosureQrScan()"
+          (input)="onEnclosureQrInput()"
+          (change)="onEnclosureQrScan()"
+          (blur)="onEnclosureQrScan()"
           placeholder="Scan QR code URL"
           class="scan-input"
-          [disabled]="currentStep === 'quectel'"
+          [disabled]="currentStep === 'quectel' || validationFailed"
           [class.completed]="verificationData.enclosureQrUrl">
         
         <div class="input-status" *ngIf="verificationData.enclosureQrUrl">
@@ -106,41 +115,123 @@
       </div>
     </div>
 
+    <!-- Validation Failure Alert -->
+    <div class="validation-failure-section" *ngIf="validationFailed">
+      <div class="validation-header failure">
+        <h2 class="failure-title">❌ VALIDATION FAILED</h2>
+        <p class="validation-subtitle">Device verification unsuccessful</p>
+      </div>
+
+      <div class="failure-results-container">
+        <!-- Failure Results -->
+        <div class="main-results">
+          <div class="result-card error" *ngIf="verificationData.imeiMatches === false">
+            <div class="result-icon">
+              <span class="large-icon">❌</span>
+            </div>
+            <div class="result-content">
+              <h4>IMEI VERIFICATION</h4>
+              <p class="result-status error">MISMATCH DETECTED</p>
+              <p class="result-detail">The Quectel module IMEI does not match the enclosure QR code IMEI</p>
+            </div>
+          </div>
+
+          <div class="result-card error" *ngIf="verificationData.urlFormatValid === false">
+            <div class="result-icon">
+              <span class="large-icon">❌</span>
+            </div>
+            <div class="result-content">
+              <h4>QR CODE URL</h4>
+              <p class="result-status error">INVALID FORMAT</p>
+              <p class="result-detail">URL does not match the selected {{verificationData.selectedDeviceType === 'tydenbrooks' ? 'Tydenbrooks' : 'Vynd'}} device pattern</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Failure Details -->
+        <div class="detailed-info error-info">
+          <h3>Verification Details</h3>
+          <div class="info-grid">
+            <div class="info-item" *ngIf="verificationData.quectelImei">
+              <span class="info-label">Scanned Quectel IMEI:</span>
+              <span class="info-value mono">{{verificationData.quectelImei}}</span>
+            </div>
+            <div class="info-item" *ngIf="verificationData.enclosureImei">
+              <span class="info-label">Extracted Enclosure IMEI:</span>
+              <span class="info-value mono">{{verificationData.enclosureImei || 'Could not extract'}}</span>
+            </div>
+            <div class="info-item" *ngIf="verificationData.enclosureQrUrl">
+              <span class="info-label">Scanned URL:</span>
+              <span class="info-value small">{{verificationData.enclosureQrUrl}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="failure-actions">
+          <button class="primary-btn large-btn" (click)="restartVerification()">
+            🔄 Restart Verification
+          </button>
+          <button class="secondary-btn large-btn" (click)="startNewVerification()">
+            📱 Start New (Change Device Type)
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Validation Results -->
-    <div class="validation-section" *ngIf="currentStep === 'files' || currentStep === 'complete'">
-      <h3>Validation Results</h3>
-      <div class="validation-grid">
-        <div class="validation-item">
-          <span class="label">Device Type:</span>
-          <span class="device-display">
-            <span *ngIf="verificationData.validatedDevice === 'tydenbrooks'">Tydenbrooks</span>
-            <span *ngIf="verificationData.validatedDevice === 'vynd'">Vynd</span>
-            <span *ngIf="!verificationData.validatedDevice">Not Validated</span>
-          </span>
+    <div class="validation-section success-validation" *ngIf="(currentStep === 'files' || currentStep === 'complete') && !validationFailed">
+      <div class="validation-header">
+        <h2 class="success-title">✅ VALIDATION PASSED</h2>
+        <p class="validation-subtitle">All checks completed successfully</p>
+      </div>
+
+      <div class="validation-results-container">
+        <!-- Main Results -->
+        <div class="main-results">
+          <div class="result-card" [class.success]="verificationData.imeiMatches">
+            <div class="result-icon">
+              <span class="large-icon">✅</span>
+            </div>
+            <div class="result-content">
+              <h4>IMEI VERIFICATION</h4>
+              <p class="result-status">MATCHED</p>
+              <p class="result-detail">Quectel module IMEI matches enclosure QR code</p>
+            </div>
+          </div>
+
+          <div class="result-card" [class.success]="verificationData.urlFormatValid">
+            <div class="result-icon">
+              <span class="large-icon">✅</span>
+            </div>
+            <div class="result-content">
+              <h4>QR CODE URL</h4>
+              <p class="result-status">VALID FORMAT</p>
+              <p class="result-detail">URL matches {{verificationData.validatedDevice === 'tydenbrooks' ? 'Tydenbrooks' : 'Vynd'}} device pattern</p>
+            </div>
+          </div>
         </div>
-        <div class="validation-item">
-          <span class="label">IMEI Match:</span>
-          <span [class.success]="verificationData.imeiMatches"
-                [class.error]="verificationData.imeiMatches === false">
-            <span *ngIf="verificationData.imeiMatches">✅ Match</span>
-            <span *ngIf="verificationData.imeiMatches === false">❌ No Match</span>
-          </span>
-        </div>
-        <div class="validation-item">
-          <span class="label">URL Format:</span>
-          <span [class.success]="verificationData.urlFormatValid"
-                [class.error]="verificationData.urlFormatValid === false">
-            <span *ngIf="verificationData.urlFormatValid">✅ Valid</span>
-            <span *ngIf="verificationData.urlFormatValid === false">❌ Invalid</span>
-          </span>
-        </div>
-        <div class="validation-item">
-          <span class="label">Quectel IMEI:</span>
-          <span class="imei-display">{{verificationData.quectelImei}}</span>
-        </div>
-        <div class="validation-item">
-          <span class="label">Enclosure IMEI:</span>
-          <span class="imei-display">{{verificationData.enclosureImei}}</span>
+
+        <!-- Detailed Information -->
+        <div class="detailed-info">
+          <h3>Device Information</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Device Type Tested:</span>
+              <span class="info-value bold">{{verificationData.validatedDevice === 'tydenbrooks' ? 'TYDENBROOKS' : 'VYND'}} DEVICE</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Quectel Module IMEI:</span>
+              <span class="info-value mono">{{verificationData.quectelImei}}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Enclosure QR IMEI:</span>
+              <span class="info-value mono">{{verificationData.enclosureImei}}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Scanned URL:</span>
+              <span class="info-value small">{{verificationData.enclosureQrUrl}}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -187,14 +278,21 @@
 
     <!-- Save Section -->
     <div class="save-section" *ngIf="currentStep === 'files' || currentStep === 'complete'">
-      <button 
-        class="save-btn primary-btn"
-        (click)="saveVerification()"
-        [disabled]="!canSave() || isProcessing"
-        *ngIf="currentStep === 'files'">
-        <span *ngIf="!isProcessing">Save Verification</span>
-        <span *ngIf="isProcessing">Saving...</span>
-      </button>
+      <div class="action-buttons" *ngIf="currentStep === 'files'">
+        <button
+          class="save-btn primary-btn"
+          (click)="saveVerification()"
+          [disabled]="!canSave() || isProcessing">
+          <span *ngIf="!isProcessing">Save Verification</span>
+          <span *ngIf="isProcessing">Saving...</span>
+        </button>
+        <button
+          class="restart-btn secondary-btn"
+          (click)="restartVerification()"
+          [disabled]="isProcessing">
+          Restart Verification
+        </button>
+      </div>
     </div>
 
     <!-- Complete Section -->
