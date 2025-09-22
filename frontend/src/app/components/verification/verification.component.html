@@ -5,6 +5,30 @@
   </header>
 
   <main>
+    <!-- Device Type Selection -->
+    <div class="device-type-section">
+      <h3>Select Device Type to Test:</h3>
+      <div class="device-type-options">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="verificationData.deviceTypes.tydenbrooks"
+            (change)="onDeviceTypeChange()">
+          <span class="checkbox-text">Tydenbrooks Device</span>
+        </label>
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="verificationData.deviceTypes.vynd"
+            (change)="onDeviceTypeChange()">
+          <span class="checkbox-text">Vynd Device</span>
+        </label>
+      </div>
+      <div class="device-warning" *ngIf="!verificationData.deviceTypes.tydenbrooks && !verificationData.deviceTypes.vynd">
+        ⚠️ Please select at least one device type to test
+      </div>
+    </div>
+
     <!-- Step 1: Quectel IMEI Scan -->
     <div class="step-section" [class.active]="currentStep === 'quectel'">
       <div class="step-header">
@@ -65,11 +89,14 @@
         
         <div class="input-status" *ngIf="verificationData.enclosureQrUrl">
           <div class="url-validation">
-            <div [class.success]="verificationData.urlFormatValid" 
+            <div [class.success]="verificationData.urlFormatValid"
                  [class.error]="verificationData.urlFormatValid === false">
-              URL Format: 
+              URL Format:
               <span *ngIf="verificationData.urlFormatValid">✅ Valid</span>
-              <span *ngIf="verificationData.urlFormatValid === false">❌ Invalid</span>
+              <span *ngIf="verificationData.urlFormatValid === false">❌ Invalid (Does not match selected device types)</span>
+            </div>
+            <div *ngIf="verificationData.validatedDevice" class="validated-device">
+              Validated as: <strong>{{verificationData.validatedDevice === 'tydenbrooks' ? 'Tydenbrooks' : 'Vynd'}} Device</strong>
             </div>
             <div *ngIf="verificationData.enclosureImei" class="extracted-imei">
               Extracted IMEI: {{verificationData.enclosureImei}}
@@ -84,8 +111,16 @@
       <h3>Validation Results</h3>
       <div class="validation-grid">
         <div class="validation-item">
+          <span class="label">Device Type:</span>
+          <span class="device-display">
+            <span *ngIf="verificationData.validatedDevice === 'tydenbrooks'">Tydenbrooks</span>
+            <span *ngIf="verificationData.validatedDevice === 'vynd'">Vynd</span>
+            <span *ngIf="!verificationData.validatedDevice">Not Validated</span>
+          </span>
+        </div>
+        <div class="validation-item">
           <span class="label">IMEI Match:</span>
-          <span [class.success]="verificationData.imeiMatches" 
+          <span [class.success]="verificationData.imeiMatches"
                 [class.error]="verificationData.imeiMatches === false">
             <span *ngIf="verificationData.imeiMatches">✅ Match</span>
             <span *ngIf="verificationData.imeiMatches === false">❌ No Match</span>
@@ -93,7 +128,7 @@
         </div>
         <div class="validation-item">
           <span class="label">URL Format:</span>
-          <span [class.success]="verificationData.urlFormatValid" 
+          <span [class.success]="verificationData.urlFormatValid"
                 [class.error]="verificationData.urlFormatValid === false">
             <span *ngIf="verificationData.urlFormatValid">✅ Valid</span>
             <span *ngIf="verificationData.urlFormatValid === false">❌ Invalid</span>

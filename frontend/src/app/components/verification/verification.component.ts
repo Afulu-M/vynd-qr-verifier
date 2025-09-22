@@ -11,6 +11,11 @@ interface VerificationData {
   urlFormatValid: boolean | null;
   batteryFile: File | null;
   qaFile: File | null;
+  deviceTypes: {
+    tydenbrooks: boolean;
+    vynd: boolean;
+  };
+  validatedDevice: 'tydenbrooks' | 'vynd' | null;
 }
 
 @Component({
@@ -33,7 +38,12 @@ export class VerificationComponent {
     imeiMatches: null,
     urlFormatValid: null,
     batteryFile: null,
-    qaFile: null
+    qaFile: null,
+    deviceTypes: {
+      tydenbrooks: true,
+      vynd: false
+    },
+    validatedDevice: null
   };
 
   currentStep: 'quectel' | 'enclosure' | 'files' | 'complete' = 'quectel';
@@ -70,16 +80,53 @@ export class VerificationComponent {
     }
   }
 
+  onDeviceTypeChange() {
+    // Re-validate the URL if we already have one
+    if (this.verificationData.enclosureQrUrl) {
+      this.extractImeiFromUrl();
+      this.validateData();
+    }
+  }
+
   extractImeiFromUrl() {
-    const urlPattern = /https:\/\/tydendigital\.com\/#\/scan-device\/(\d{15})/;
-    const match = this.verificationData.enclosureQrUrl.match(urlPattern);
-    
+    const tydenbrooksPattern = /https:\/\/tydendigital\.com\/#\/scan-device\/(\d{15})/;
+    const vyndPattern = /https:\/\/dev-vynd-full\.web\.app\/#\/scan-device\/(\d{15})/;
+
+    let match = null;
+    let deviceType = null;
+
+    // Check if at least one device type is selected
+    if (!this.verificationData.deviceTypes.tydenbrooks && !this.verificationData.deviceTypes.vynd) {
+      this.verificationData.enclosureImei = '';
+      this.verificationData.urlFormatValid = false;
+      this.verificationData.validatedDevice = null;
+      return;
+    }
+
+    // Check Tydenbrooks pattern if selected
+    if (this.verificationData.deviceTypes.tydenbrooks) {
+      match = this.verificationData.enclosureQrUrl.match(tydenbrooksPattern);
+      if (match && match[1]) {
+        deviceType = 'tydenbrooks';
+      }
+    }
+
+    // Check Vynd pattern if selected and no match found yet
+    if (!match && this.verificationData.deviceTypes.vynd) {
+      match = this.verificationData.enclosureQrUrl.match(vyndPattern);
+      if (match && match[1]) {
+        deviceType = 'vynd';
+      }
+    }
+
     if (match && match[1]) {
       this.verificationData.enclosureImei = match[1];
       this.verificationData.urlFormatValid = true;
+      this.verificationData.validatedDevice = deviceType as 'tydenbrooks' | 'vynd';
     } else {
       this.verificationData.enclosureImei = '';
       this.verificationData.urlFormatValid = false;
+      this.verificationData.validatedDevice = null;
     }
   }
 
@@ -138,7 +185,12 @@ export class VerificationComponent {
       imeiMatches: null,
       urlFormatValid: null,
       batteryFile: null,
-      qaFile: null
+      qaFile: null,
+      deviceTypes: {
+        tydenbrooks: true,
+        vynd: false
+      },
+      validatedDevice: null
     };
     this.currentStep = 'quectel';
     this.focusQuectelInput();

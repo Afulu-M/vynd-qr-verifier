@@ -40,6 +40,61 @@ main {
   margin: 0 auto;
 }
 
+.device-type-section {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid var(--vynd-red);
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: var(--vynd-red);
+    font-size: 18px;
+  }
+
+  .device-type-options {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--vynd-dark-gray);
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+      cursor: pointer;
+    }
+
+    .checkbox-text {
+      font-weight: 500;
+    }
+
+    &:hover .checkbox-text {
+      color: var(--vynd-red);
+    }
+  }
+
+  .device-warning {
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 4px;
+    color: #856404;
+    font-weight: 500;
+  }
+}
+
 .step-section {
   background: white;
   border-radius: 8px;
@@ -153,6 +208,14 @@ main {
     gap: 8px;
   }
 
+  .validated-device {
+    color: var(--vynd-red);
+    font-size: 15px;
+    strong {
+      font-weight: 600;
+    }
+  }
+
   .extracted-imei {
     font-family: monospace;
     font-size: 16px;
@@ -210,6 +273,11 @@ main {
       font-family: monospace;
       font-size: 14px;
       color: var(--vynd-dark-gray);
+    }
+
+    .device-display {
+      font-weight: 500;
+      color: var(--vynd-red);
     }
   }
 }

@@ -1,0 +1,37 @@
+Your Azure Static Web App deployment should be successful
+  now. To configure the custom domain for vynd.tech:
+
+  In Azure Portal:
+  1. Go to your Static Web App resource
+  2. Navigate to "Custom domains" in the left menu
+  3. Click "+ Add" and select "Custom domain on other DNS"
+  4. Enter your subdomain (e.g., qr-verifier.vynd.tech)
+  5. Azure will provide you with a CNAME value
+
+  In your vynd.tech DNS settings:
+  1. Add a CNAME record:
+    - Name: qr-verifier (or your preferred subdomain)
+    - Value: The Azure-provided URL (like
+  victorious-coast-04004aa03.1.azurestaticapps.net)
+
+  Verification:
+  Once DNS propagates (usually 5-15 minutes), return to Azure     
+  and click "Validate" to complete the setup.
+
+  Your QR verifier app will then be accessible at
+  https://qr-verifier.vynd.tech with automatic SSL certificate    
+   provisioning by Azure.
+
+● Your Vynd QR Verifier application is now successfully
+  deployed and ready for custom domain configuration. The
+  deployment includes:
+
+  ✅ Complete Angular application with USB barcode scanner
+  support✅ GitHub repository with proper CI/CD pipeline✅
+  Azure Static Web Apps hosting with automatic SSL✅
+  Multi-step verification workflow for Quectel IMEI and
+  enclosure QR scanning✅ File upload capabilities for battery
+   data and QA results
+
+  Follow the domain configuration steps above to make it
+  accessible at your preferred vynd.tech subdomain.

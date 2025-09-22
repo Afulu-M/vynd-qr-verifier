@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VyndQRVerifier.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+22cdfcd5385f06530e0e303e146adf69d25dd3aa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d68819063d1669864068b910a9c36b142587c680")]
 [assembly: System.Reflection.AssemblyProductAttribute("VyndQRVerifier.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VyndQRVerifier.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
