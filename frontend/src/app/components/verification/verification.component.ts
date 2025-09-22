@@ -76,9 +76,13 @@ export class VerificationComponent {
       this.validateData();
 
       // Check if validation failed
-      if (this.verificationData.imeiMatches === false || this.verificationData.urlFormatValid === false) {
+      if (this.verificationData.urlFormatValid === false) {
         this.validationFailed = true;
-      } else if (this.verificationData.imeiMatches && this.verificationData.urlFormatValid) {
+      } else if (this.verificationData.imeiMatches === false) {
+        this.validationFailed = true;
+      } else if (this.verificationData.urlFormatValid === true &&
+                 (this.verificationData.imeiMatches === true || this.verificationData.imeiMatches === null)) {
+        // Success: URL is valid and either IMEI matches or IMEI not in QR (null)
         this.currentStep = 'files';
       }
     }
@@ -105,10 +109,16 @@ export class VerificationComponent {
   }
 
   extractImeiFromUrl() {
-    const tydenbrooksPattern = /https:\/\/tydendigital\.com\/#\/scan-device\/(\d{15})/;
-    const vyndPattern = /https:\/\/dev-vynd-full\.web\.app\/#\/scan-device\/(\d{15})/;
+    // Patterns for URLs with IMEI
+    const tydenbrooksPatternWithImei = /https:\/\/tydendigital\.com\/#\/scan-device\/(\d{15})/;
+    const vyndPatternWithImei = /https:\/\/dev-vynd-full\.web\.app\/#\/scan-device\/(\d{15})/;
+
+    // Patterns for base URLs without IMEI
+    const tydenbrooksBasePattern = /https:\/\/tydendigital\.com\/#\/scan-device\/?$/;
+    const vyndBasePattern = /https:\/\/dev-vynd-full\.web\.app\/#\/scan-device\/?$/;
 
     let match = null;
+    let isBaseUrl = false;
 
     // Check if a device type is selected
     if (!this.verificationData.selectedDeviceType) {
@@ -120,32 +130,60 @@ export class VerificationComponent {
 
     // Check pattern based on selected device type
     if (this.verificationData.selectedDeviceType === 'tydenbrooks') {
-      match = this.verificationData.enclosureQrUrl.match(tydenbrooksPattern);
+      // First try to match URL with IMEI
+      match = this.verificationData.enclosureQrUrl.match(tydenbrooksPatternWithImei);
       if (match && match[1]) {
+        this.verificationData.enclosureImei = match[1];
+        this.verificationData.urlFormatValid = true;
         this.verificationData.validatedDevice = 'tydenbrooks';
+      } else {
+        // Check if it's a base URL (valid format but no IMEI)
+        isBaseUrl = tydenbrooksBasePattern.test(this.verificationData.enclosureQrUrl);
+        if (isBaseUrl) {
+          this.verificationData.enclosureImei = '';
+          this.verificationData.urlFormatValid = true; // URL format is valid
+          this.verificationData.validatedDevice = 'tydenbrooks';
+        } else {
+          this.verificationData.enclosureImei = '';
+          this.verificationData.urlFormatValid = false;
+          this.verificationData.validatedDevice = null;
+        }
       }
     } else if (this.verificationData.selectedDeviceType === 'vynd') {
-      match = this.verificationData.enclosureQrUrl.match(vyndPattern);
+      // First try to match URL with IMEI
+      match = this.verificationData.enclosureQrUrl.match(vyndPatternWithImei);
       if (match && match[1]) {
+        this.verificationData.enclosureImei = match[1];
+        this.verificationData.urlFormatValid = true;
         this.verificationData.validatedDevice = 'vynd';
+      } else {
+        // Check if it's a base URL (valid format but no IMEI)
+        isBaseUrl = vyndBasePattern.test(this.verificationData.enclosureQrUrl);
+        if (isBaseUrl) {
+          this.verificationData.enclosureImei = '';
+          this.verificationData.urlFormatValid = true; // URL format is valid
+          this.verificationData.validatedDevice = 'vynd';
+        } else {
+          this.verificationData.enclosureImei = '';
+          this.verificationData.urlFormatValid = false;
+          this.verificationData.validatedDevice = null;
+        }
       }
-    }
-
-    if (match && match[1]) {
-      this.verificationData.enclosureImei = match[1];
-      this.verificationData.urlFormatValid = true;
-    } else {
-      this.verificationData.enclosureImei = '';
-      this.verificationData.urlFormatValid = false;
-      this.verificationData.validatedDevice = null;
     }
   }
 
   validateData() {
     // Validate IMEI match
     if (this.verificationData.quectelImei && this.verificationData.enclosureImei) {
-      this.verificationData.imeiMatches = 
+      // Both IMEIs available - compare them
+      this.verificationData.imeiMatches =
         this.verificationData.quectelImei === this.verificationData.enclosureImei;
+    } else if (this.verificationData.quectelImei && !this.verificationData.enclosureImei && this.verificationData.urlFormatValid) {
+      // URL is valid but doesn't contain IMEI - consider this as "not applicable" rather than failure
+      this.verificationData.imeiMatches = null; // Will be handled as "IMEI not in QR code"
+    } else {
+      // Missing data
+      this.verificationData.imeiMatches = false;
     }
   }
 

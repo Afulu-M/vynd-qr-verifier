@@ -188,14 +188,17 @@
       <div class="validation-results-container">
         <!-- Main Results -->
         <div class="main-results">
-          <div class="result-card" [class.success]="verificationData.imeiMatches">
+          <div class="result-card" [class.success]="verificationData.imeiMatches === true || verificationData.imeiMatches === null">
             <div class="result-icon">
-              <span class="large-icon">✅</span>
+              <span class="large-icon" *ngIf="verificationData.imeiMatches === true">✅</span>
+              <span class="large-icon" *ngIf="verificationData.imeiMatches === null">ℹ️</span>
             </div>
             <div class="result-content">
               <h4>IMEI VERIFICATION</h4>
-              <p class="result-status">MATCHED</p>
-              <p class="result-detail">Quectel module IMEI matches enclosure QR code</p>
+              <p class="result-status" *ngIf="verificationData.imeiMatches === true">MATCHED</p>
+              <p class="result-status" *ngIf="verificationData.imeiMatches === null">NOT IN QR CODE</p>
+              <p class="result-detail" *ngIf="verificationData.imeiMatches === true">Quectel module IMEI matches enclosure QR code</p>
+              <p class="result-detail" *ngIf="verificationData.imeiMatches === null">QR code contains valid URL but no IMEI for comparison</p>
             </div>
           </div>
 
@@ -225,7 +228,9 @@
             </div>
             <div class="info-item">
               <span class="info-label">Enclosure QR IMEI:</span>
-              <span class="info-value mono">{{verificationData.enclosureImei}}</span>
+              <span class="info-value mono" *ngIf="verificationData.enclosureImei">{{verificationData.enclosureImei}}</span>
+              <span class="info-value" *ngIf="!verificationData.enclosureImei && verificationData.urlFormatValid">Not included in QR code</span>
+              <span class="info-value" *ngIf="!verificationData.enclosureImei && !verificationData.urlFormatValid">Could not extract</span>
             </div>
             <div class="info-item">
               <span class="info-label">Scanned URL:</span>
