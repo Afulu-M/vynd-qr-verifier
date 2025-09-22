@@ -68,6 +68,10 @@ export class VerificationComponent {
   }
 
   onEnclosureQrScan() {
+    // Debug: Log what we captured
+    console.log('QR Scan captured:', this.verificationData.enclosureQrUrl);
+    console.log('URL length:', this.verificationData.enclosureQrUrl?.length);
+
     // Only process if we have a URL that looks complete (starts with http)
     if (this.verificationData.enclosureQrUrl &&
         this.verificationData.enclosureQrUrl.startsWith('http') &&
@@ -88,15 +92,24 @@ export class VerificationComponent {
     }
   }
 
+  private scanTimeout: any = null;
+
   onEnclosureQrInput() {
-    // Check if the input is a complete URL (QR scanners typically send the full URL at once)
+    // Clear any existing timeout
+    if (this.scanTimeout) {
+      clearTimeout(this.scanTimeout);
+    }
+
+    // Only process if input looks like a URL and we're not in a failed state
     if (this.verificationData.enclosureQrUrl &&
         this.verificationData.enclosureQrUrl.startsWith('https://') &&
         !this.validationFailed) {
-      // Slight delay to ensure the model is updated
-      setTimeout(() => {
+
+      // Wait for scanner to finish inputting (longer delay for complete URL)
+      this.scanTimeout = setTimeout(() => {
         this.onEnclosureQrScan();
-      }, 50);
+        this.scanTimeout = null;
+      }, 200); // Increased delay to allow complete URL input
     }
   }
 
