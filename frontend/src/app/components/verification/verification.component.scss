@@ -515,13 +515,23 @@ main {
     }
   }
 
-  .save-btn, .restart-btn {
+  .save-btn, .restart-btn, .export-btn {
     padding: 16px 48px;
     font-size: 18px;
 
     &:disabled {
       opacity: 0.6;
       cursor: not-allowed;
+    }
+  }
+
+  .export-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+
+    &:hover:not(:disabled) {
+      background: #45a049;
     }
   }
 }

@@ -32,6 +32,8 @@ export class VerificationComponent {
   @ViewChild('batteryFileInput') batteryFileInput!: ElementRef;
   @ViewChild('qaFileInput') qaFileInput!: ElementRef;
 
+  hasUnsavedData: boolean = false;
+
   verificationData: VerificationData = {
     quectelImei: '',
     quectelFullData: '',
@@ -102,6 +104,9 @@ export class VerificationComponent {
         this.verificationData.quectelFullData = this.verificationData.quectelImei;
         console.log('Final stored data:', this.verificationData.quectelFullData);
 
+        // Mark as having unsaved data
+        this.hasUnsavedData = true;
+
         // Move to next step
         this.currentStep = 'enclosure';
         setTimeout(() => {
@@ -123,6 +128,9 @@ export class VerificationComponent {
 
     // Store the complete scanned data
     this.verificationData.enclosureQrFullData = this.verificationData.enclosureQrUrl;
+
+    // Mark as having unsaved data
+    this.hasUnsavedData = true;
 
     // Only process if we have a URL that looks complete (starts with http)
     if (this.verificationData.enclosureQrUrl &&
@@ -387,7 +395,96 @@ export class VerificationComponent {
     }, 1000);
   }
 
+  exportToCSV() {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    const filename = `verification_data_${timestamp}.csv`;
+
+    // Prepare CSV data
+    const csvHeaders = [
+      'Timestamp',
+      'Device Type',
+      'Quectel Data',
+      'Expected URL',
+      'Scanned QR URL',
+      'Validation Result',
+      'URL Format Valid',
+      'Failure Reason',
+      'Battery File',
+      'QA File'
+    ];
+
+    const validationResult = this.verificationData.imeiMatches === true ? 'PASS' :
+                           this.verificationData.imeiMatches === false ? 'FAIL' : 'N/A';
+
+    const urlFormatValid = this.verificationData.urlFormatValid === true ? 'Valid' :
+                          this.verificationData.urlFormatValid === false ? 'Invalid' : 'N/A';
+
+    const csvData = [
+      new Date().toLocaleString(),
+      this.verificationData.selectedDeviceType || 'Not selected',
+      this.verificationData.quectelFullData || 'Not scanned',
+      this.verificationData.expectedUrl || 'Not generated',
+      this.verificationData.enclosureQrFullData || 'Not scanned',
+      validationResult,
+      urlFormatValid,
+      this.verificationData.failureReason || 'None',
+      this.verificationData.batteryFile?.name || 'Not uploaded',
+      this.verificationData.qaFile?.name || 'Not uploaded'
+    ];
+
+    // Create CSV content
+    const csvContent = [
+      csvHeaders.join(','),
+      csvData.map(field => `"${field}"`).join(',')
+    ].join('\n');
+
+    // Create and download the file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.display = 'none';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    console.log(`Exported verification data to ${filename}`);
+    this.hasUnsavedData = false;
+  }
+
+  confirmAndExport(): boolean {
+    if (this.hasUnsavedData && this.hasVerificationData()) {
+      const userChoice = confirm(
+        'You have unsaved verification data. Would you like to export it to CSV before starting a new verification?\n\n' +
+        'Click "OK" to save and continue, or "Cancel" to continue without saving.'
+      );
+
+      if (userChoice) {
+        this.exportToCSV();
+      }
+      return true;
+    }
+    return true;
+  }
+
+  hasVerificationData(): boolean {
+    return !!(
+      this.verificationData.quectelFullData ||
+      this.verificationData.enclosureQrFullData ||
+      this.verificationData.batteryFile ||
+      this.verificationData.qaFile
+    );
+  }
+
   startNewVerification(keepDeviceType: boolean = false) {
+    // Check if user wants to save before starting new
+    if (!this.confirmAndExport()) {
+      return;
+    }
+
     const currentDeviceType = this.verificationData.selectedDeviceType;
     this.verificationData = {
       quectelImei: '',
@@ -406,6 +503,7 @@ export class VerificationComponent {
     };
     this.validationFailed = false;
     this.currentStep = 'quectel';
+    this.hasUnsavedData = false;
     this.focusQuectelInput();
   }
 

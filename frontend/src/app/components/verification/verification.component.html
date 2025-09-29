@@ -184,6 +184,9 @@
         </div>
 
         <div class="failure-actions">
+          <button class="export-btn secondary-btn large-btn" (click)="exportToCSV()">
+            📊 Export Results to CSV
+          </button>
           <button class="primary-btn large-btn" (click)="restartVerification()">
             🔄 Restart Verification
           </button>
@@ -313,6 +316,12 @@
           <span *ngIf="isProcessing">Saving...</span>
         </button>
         <button
+          class="export-btn secondary-btn"
+          (click)="exportToCSV()"
+          [disabled]="isProcessing || !hasVerificationData()">
+          📊 Export to CSV
+        </button>
+        <button
           class="restart-btn secondary-btn"
           (click)="restartVerification()"
           [disabled]="isProcessing">
@@ -329,6 +338,9 @@
       </div>
       
       <div class="action-buttons">
+        <button class="export-btn secondary-btn" (click)="exportToCSV()">
+          📊 Export Results to CSV
+        </button>
         <button class="primary-btn" (click)="startNewVerification()">
           Start New Verification
         </button>
