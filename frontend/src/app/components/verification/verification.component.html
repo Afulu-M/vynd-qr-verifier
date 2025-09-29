@@ -46,26 +46,25 @@
       </div>
       
       <div class="scan-input-section">
-        <label for="quectel-input">Use barcode scanner to scan IMEI:</label>
+        <label for="quectel-input">Use barcode scanner to scan Quectel data:</label>
         <input
           #quectelInput
           type="text"
           id="quectel-input"
           [(ngModel)]="verificationData.quectelImei"
           (input)="onQuectelScan()"
-          placeholder="Scan or enter 15-digit IMEI"
-          maxlength="15"
+          placeholder="Scan or enter complete Quectel data"
           class="scan-input"
           [disabled]="validationFailed"
           [class.completed]="verificationData.quectelImei.length >= 15">
         
         <div class="input-status">
-          <div *ngIf="verificationData.quectelImei.length > 0 && verificationData.quectelImei.length < 15" 
+          <div *ngIf="verificationData.quectelImei.length > 0 && verificationData.quectelImei.length < 15"
                class="warning">
-            IMEI must be 15 digits (current: {{verificationData.quectelImei.length}})
+            IMEI must be at least 15 digits (current: {{verificationData.quectelImei.length}})
           </div>
           <div *ngIf="verificationData.quectelImei.length >= 15" class="success">
-            ✅ Quectel IMEI: {{verificationData.quectelImei}}
+            ✅ Complete Quectel Data: {{verificationData.quectelFullData || verificationData.quectelImei}}
           </div>
         </div>
       </div>
@@ -97,6 +96,9 @@
           [class.completed]="verificationData.enclosureQrUrl">
         
         <div class="input-status" *ngIf="verificationData.enclosureQrUrl">
+          <div *ngIf="verificationData.enclosureQrFullData" class="scanned-data">
+            <strong>Complete Scanned Data:</strong> {{verificationData.enclosureQrFullData}}
+          </div>
           <div class="url-validation">
             <div [class.success]="verificationData.urlFormatValid"
                  [class.error]="verificationData.urlFormatValid === false">
@@ -132,7 +134,7 @@
             <div class="result-content">
               <h4>IMEI VERIFICATION</h4>
               <p class="result-status error">MISMATCH DETECTED</p>
-              <p class="result-detail">The Quectel module IMEI does not match the enclosure QR code IMEI</p>
+              <p class="result-detail">The Quectel module data does not match the enclosure QR code data</p>
             </div>
           </div>
 
@@ -151,18 +153,32 @@
         <!-- Failure Details -->
         <div class="detailed-info error-info">
           <h3>Verification Details</h3>
+
+          <!-- Failure Reason -->
+          <div class="failure-reason-box" *ngIf="verificationData.failureReason">
+            <h4>❌ Failure Reason:</h4>
+            <p class="failure-text">{{verificationData.failureReason}}</p>
+          </div>
+
           <div class="info-grid">
-            <div class="info-item" *ngIf="verificationData.quectelImei">
-              <span class="info-label">Scanned Quectel IMEI:</span>
-              <span class="info-value mono">{{verificationData.quectelImei}}</span>
+            <div class="info-item" *ngIf="verificationData.quectelFullData">
+              <span class="info-label">Scanned Quectel Data:</span>
+              <span class="info-value mono">{{verificationData.quectelFullData}}</span>
             </div>
-            <div class="info-item" *ngIf="verificationData.enclosureImei">
-              <span class="info-label">Extracted Enclosure IMEI:</span>
-              <span class="info-value mono">{{verificationData.enclosureImei || 'Could not extract'}}</span>
+
+            <div class="info-item" *ngIf="verificationData.expectedUrl">
+              <span class="info-label">Expected QR URL:</span>
+              <span class="info-value small expected">{{verificationData.expectedUrl}}</span>
             </div>
-            <div class="info-item" *ngIf="verificationData.enclosureQrUrl">
-              <span class="info-label">Scanned URL:</span>
-              <span class="info-value small">{{verificationData.enclosureQrUrl}}</span>
+
+            <div class="info-item" *ngIf="verificationData.enclosureQrFullData">
+              <span class="info-label">Actually Scanned QR URL:</span>
+              <span class="info-value small actual">{{verificationData.enclosureQrFullData}}</span>
+            </div>
+
+            <div class="info-item" *ngIf="verificationData.selectedDeviceType">
+              <span class="info-label">Selected Device Type:</span>
+              <span class="info-value">{{verificationData.selectedDeviceType === 'tydenbrooks' ? 'Tydenbrooks' : 'Vynd'}}</span>
             </div>
           </div>
         </div>
@@ -197,7 +213,7 @@
               <h4>IMEI VERIFICATION</h4>
               <p class="result-status" *ngIf="verificationData.imeiMatches === true">MATCHED</p>
               <p class="result-status" *ngIf="verificationData.imeiMatches === null">NOT IN QR CODE</p>
-              <p class="result-detail" *ngIf="verificationData.imeiMatches === true">Quectel module IMEI matches enclosure QR code</p>
+              <p class="result-detail" *ngIf="verificationData.imeiMatches === true">Quectel module data matches enclosure QR code</p>
               <p class="result-detail" *ngIf="verificationData.imeiMatches === null">QR code contains valid URL but no IMEI for comparison</p>
             </div>
           </div>
@@ -222,19 +238,24 @@
               <span class="info-label">Device Type Tested:</span>
               <span class="info-value bold">{{verificationData.validatedDevice === 'tydenbrooks' ? 'TYDENBROOKS' : 'VYND'}} DEVICE</span>
             </div>
-            <div class="info-item">
-              <span class="info-label">Quectel Module IMEI:</span>
-              <span class="info-value mono">{{verificationData.quectelImei}}</span>
+            <div class="info-item" *ngIf="verificationData.quectelFullData">
+              <span class="info-label">Scanned Quectel Data:</span>
+              <span class="info-value mono">{{verificationData.quectelFullData}}</span>
             </div>
-            <div class="info-item">
-              <span class="info-label">Enclosure QR IMEI:</span>
-              <span class="info-value mono" *ngIf="verificationData.enclosureImei">{{verificationData.enclosureImei}}</span>
-              <span class="info-value" *ngIf="!verificationData.enclosureImei && verificationData.urlFormatValid">Not included in QR code</span>
-              <span class="info-value" *ngIf="!verificationData.enclosureImei && !verificationData.urlFormatValid">Could not extract</span>
+
+            <div class="info-item" *ngIf="verificationData.expectedUrl">
+              <span class="info-label">Expected QR URL:</span>
+              <span class="info-value small success">✅ {{verificationData.expectedUrl}}</span>
             </div>
-            <div class="info-item">
-              <span class="info-label">Scanned URL:</span>
-              <span class="info-value small">{{verificationData.enclosureQrUrl}}</span>
+
+            <div class="info-item" *ngIf="verificationData.enclosureQrFullData">
+              <span class="info-label">Actually Scanned QR URL:</span>
+              <span class="info-value small success">✅ {{verificationData.enclosureQrFullData}}</span>
+            </div>
+
+            <div class="info-item" *ngIf="verificationData.imeiMatches === true">
+              <span class="info-label">Validation Result:</span>
+              <span class="info-value success-text">✅ Perfect Match - Expected and Actual URLs are identical</span>
             </div>
           </div>
         </div>
